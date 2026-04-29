@@ -17,7 +17,7 @@ pipeline {
 
         stage('Test') {
             steps {
-                sh 'mvn test -DskipTests'
+                sh 'mvn test'
             }
         }
 
@@ -33,6 +33,14 @@ pipeline {
             }
         }
 
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 5, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+
         stage('Docker Build') {
             steps {
                 sh 'docker build -t mi-app:latest .'
@@ -42,14 +50,13 @@ pipeline {
         stage('Security Scan') {
             steps {
                 sh '''
-                trivy image \
-                --scanners vuln \
-                --pkg-types os \
-                --skip-java-db-update \
-                --no-progress \
-                --timeout 10m \
+                docker run --rm \
+                -v /var/run/docker.sock:/var/run/docker.sock \
+                -v trivy-cache:/root/.cache/trivy \
+                aquasec/trivy:latest image \
+                --timeout 30m \
                 --severity HIGH,CRITICAL \
-                --exit-code 0 \
+                --exit-code 1 \
                 mi-app:latest
                 '''
             }
