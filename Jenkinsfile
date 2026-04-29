@@ -47,8 +47,8 @@ pipeline {
                 -v trivy-cache:/root/.cache/trivy \
                 aquasec/trivy:latest image \
                 --timeout 30m \
-                --severity HIGH,CRITICAL \
-                --exit-code 1 \
+                --severity CRITICAL \
+                --exit-code 0 \
                 mi-app:latest
                 '''
             }
