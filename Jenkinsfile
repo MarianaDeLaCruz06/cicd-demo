@@ -44,8 +44,9 @@ pipeline {
                 sh '''
                 docker run --rm \
                 -v /var/run/docker.sock:/var/run/docker.sock \
+                -v trivy-cache:/root/.cache/trivy \
                 aquasec/trivy:latest image \
-                --timeout 15m \
+                --timeout 30m \
                 --severity HIGH,CRITICAL \
                 mi-app:latest
                 '''
