@@ -41,7 +41,7 @@ pipeline {
 
         stage('Security Scan') {
             steps {
-                sh 'trivy image --timeout 30m --severity HIGH,CRITICAL --exit-code 0 mi-app:latest'
+                sh 'trivy image --timeout 30m --severity CRITICAL --exit-code 1 mi-app:latest'
             }
         }
 
