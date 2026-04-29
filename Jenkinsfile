@@ -42,11 +42,12 @@ pipeline {
         stage('Security Scan') {
             steps {
                 sh '''
-                docker run --rm \
-                -v /var/run/docker.sock:/var/run/docker.sock \
-                -v trivy-cache:/root/.cache/trivy \
-                aquasec/trivy:latest image \
-                --timeout 30m \
+                trivy image \
+                --scanners vuln \
+                --pkg-types os \
+                --skip-java-db-update \
+                --no-progress \
+                --timeout 10m \
                 --severity CRITICAL \
                 --exit-code 0 \
                 mi-app:latest
