@@ -41,7 +41,11 @@ pipeline {
 
         stage('Security Scan') {
             steps {
-                echo 'Pendiente Trivy'
+                sh '''
+                docker run --rm \
+                -v /var/run/docker.sock:/var/run/docker.sock \
+                aquasec/trivy:latest image --severity HIGH,CRITICAL mi-app:latest
+                '''
             }
         }
 
