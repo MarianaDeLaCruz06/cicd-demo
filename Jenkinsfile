@@ -9,15 +9,25 @@ pipeline {
             }
         }
 
+        stage('Install Maven') {
+            steps {
+                sh '''
+                apt-get update
+                apt-get install -y maven
+                mvn -version
+                '''
+            }
+        }
+
         stage('Build') {
             steps {
-                sh './mvnw clean package -DskipTests'
+                sh 'mvn clean package -DskipTests'
             }
         }
 
         stage('Test') {
             steps {
-                sh './mvnw test'
+                sh 'mvn test'
             }
         }
 
