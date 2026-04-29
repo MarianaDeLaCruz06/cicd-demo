@@ -44,6 +44,7 @@ pipeline {
                 sh '''
                 trivy image \
                 --scanners vuln \
+                --skip-java-db-update \
                 --no-progress \
                 --timeout 10m \
                 --severity CRITICAL \
