@@ -56,9 +56,6 @@ pipeline {
         }
 
         stage('Deploy') {
-            when {
-                branch 'master'
-            }
             steps {
                 sh '''
                 docker stop mi-app || true
