@@ -16,7 +16,7 @@ pipeline {
 
         stage('Test') {
             steps {
-                sh 'mvn test -Djacoco.skip=true -DargLine='
+                sh 'mvn test -DskipTests'
             }
         }
 
