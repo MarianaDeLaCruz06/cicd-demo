@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     stages {
+
         stage('Checkout') {
             steps {
                 checkout scm
@@ -20,25 +21,34 @@ pipeline {
             }
         }
 
+        stage('Static Analysis (SonarQube)') {
+            steps {
+                withSonarQubeEnv('SonarQube') {
+                    sh '''
+                    mvn sonar:sonar \
+                    -Dsonar.projectKey=cicd-demo \
+                    -Dsonar.projectName=cicd-demo
+                    '''
+                }
+            }
+        }
+
         stage('Docker Build') {
             steps {
                 sh 'docker build -t mi-app:latest .'
             }
         }
 
-        stage('Static Analysis') {
-            steps {
-                echo 'Aquí irá SonarQube'
-            }
-        }
-
         stage('Security Scan') {
             steps {
-                echo 'Aquí irá Trivy'
+                echo 'Pendiente Trivy'
             }
         }
 
         stage('Deploy') {
+            when {
+                branch 'master'
+            }
             steps {
                 sh '''
                 docker stop mi-app || true
@@ -51,7 +61,6 @@ pipeline {
 
     post {
         always {
-            echo 'Limpiando entorno...'
             cleanWs()
         }
 
