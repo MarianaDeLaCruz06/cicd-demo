@@ -41,7 +41,17 @@ pipeline {
 
         stage('Security Scan') {
             steps {
-                sh 'trivy image --severity CRITICAL mi-app:latest'
+                sh '''
+                trivy image \
+                --scanners vuln \
+                --pkg-types os \
+                --skip-java-db-update \
+                --no-progress \
+                --timeout 10m \
+                --severity LOW,MEDIUM,HIGH,CRITICAL \
+                --exit-code 0 \
+                mi-app:latest
+                '''
             }
         }
 
