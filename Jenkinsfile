@@ -2,20 +2,9 @@ pipeline {
     agent any
 
     stages {
-
         stage('Checkout') {
             steps {
                 checkout scm
-            }
-        }
-
-        stage('Install Maven') {
-            steps {
-                sh '''
-                apt-get update
-                apt-get install -y maven
-                mvn -version
-                '''
             }
         }
 
